@@ -1,4 +1,5 @@
 # import dependencies
+import time
 import torch
 from PIL import Image
 from torch import nn, save, load
@@ -35,9 +36,15 @@ clf = ImageClassifier().to('cpu')  # Change 'cuda' to 'cpu'
 opt = Adam(clf.parameters(), lr=1e-3)
 loss_fn = nn.CrossEntropyLoss()
 
+import time
+
+# ... (rest of the code)
+
 # Training flow
 if __name__ == "__main__":
     for epoch in range(10):  # train for 10 epochs
+        start_time = time.time()
+        
         for i, batch in enumerate(dataset):
             X, y = batch
             X, y = X.to('cpu'), y.to('cpu')  # Change 'cuda' to 'cpu'
@@ -53,8 +60,9 @@ if __name__ == "__main__":
             if i % 100 == 0:
                 print(f"Epoch:{epoch}, Batch:{i}, Loss:{loss.item()}")
 
-        print(f"Epoch:{epoch} loss is {loss.item()}")
-
+        end_time = time.time()
+        elapsed_time = end_time - start_time
+        print(f"Epoch:{epoch} loss is {loss.item()}, time elapsed: {elapsed_time:.2f} seconds")
 
     with open('model_state.pt', 'wb') as f:
         save(clf.state_dict(), f)
