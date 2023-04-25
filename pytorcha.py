@@ -38,7 +38,7 @@ loss_fn = nn.CrossEntropyLoss()
 # Training flow
 if __name__ == "__main__":
     for epoch in range(10):  # train for 10 epochs
-        for batch in dataset:
+        for i, batch in enumerate(dataset):
             X, y = batch
             X, y = X.to('cpu'), y.to('cpu')  # Change 'cuda' to 'cpu'
             yhat = clf(X)
@@ -49,7 +49,12 @@ if __name__ == "__main__":
             loss.backward()
             opt.step()
 
+            # Print progress for every 100 batches
+            if i % 100 == 0:
+                print(f"Epoch:{epoch}, Batch:{i}, Loss:{loss.item()}")
+
         print(f"Epoch:{epoch} loss is {loss.item()}")
+
 
     with open('model_state.pt', 'wb') as f:
         save(clf.state_dict(), f)
