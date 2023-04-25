@@ -24,7 +24,11 @@ class ImageClassifier(nn.Module):
             nn.Flatten(), 
             nn.Linear(64*(28-6)*(28-6), 10)  
         )
-
     def forward(self, x): 
         return self.model(x)
+    
+# Instance of the neural network, loss, optimizer 
+clf = ImageClassifier().to('cuda')
+opt = Adam(clf.parameters(), lr=1e-3)
+loss_fn = nn.CrossEntropyLoss() 
     
